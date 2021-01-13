@@ -1,0 +1,27 @@
+
+<% if @product.errors.present? %>
+  <p>
+    <%= @product.errors.full_messages.join(', ')%>
+  </p>
+<% end %>
+
+<%= form_with model: @product, local:true do |f| %>
+  <div class='form-group'>
+    <%= f.label :title %>
+    <%= f.text_field(:title, class: 'form-control', placeholder: 'Product Name')%>
+  </div>
+  <div class='form-group'>
+    <%= f.label :description %>
+    <%= f.text_area(:description, class: 'form-control', cols: 50, rows: 5, placeholder: 'Provide Description')%>
+  </div>
+  <div class='form-group'>
+    <%= f.label :price %>
+    <%= f.number_field(:price, class: 'form-control', min: 0, placeholder: 'Enter Price', step: :any )%>
+  </div>
+  <div class='form-group'>
+    <%= f.label :sale_price %>
+    <%= f.number_field(:sale_price, class: 'form-control', min: 0, placeholder: 'Enter Sale Price', step: :any )%>
+  </div>
+<%=f.submit  %> 
+
+<% end %>
