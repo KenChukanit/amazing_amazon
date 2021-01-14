@@ -14,7 +14,7 @@
 </small>
 
 
-<h2>Leave a Review</h2>
+<h2 class ="mt-">Please Leave a Review below</h2>
 <div class='shadow-sm p-3 mb-5 bg-white round'>
     <%= form_with model: [@product, @review], local: true do |f| %>
     <ul>
@@ -43,6 +43,7 @@
 <% @product.reviews.each do |review| %>
     <div class='shadow-sm p-3 mb-1 bg-white rounded'>
     <h4>Rating: <%= review.rating %></h4>
+     <h4><%= display_stars(review) %></h4>
     <p><%= review.body %></p>
     <%= link_to "Delete",product_review_path(@product,review), method: :delete,data: {confirm: "Are you sure to delete this review?"} %>
     </div>

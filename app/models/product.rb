@@ -16,7 +16,7 @@ class Product < ApplicationRecord
         }
     
     # [Exercise] Validate
-    validates :price, presence: true, uniqueness: true, numericality: { greater_than: 0, less_than: 1000 }
+    validates :price, presence: true, numericality: { greater_than: 0, less_than: 1000 }
     validates :description, presence: true, length: { minimum: 10 }
     validate :sale_price_less_than_price
 
