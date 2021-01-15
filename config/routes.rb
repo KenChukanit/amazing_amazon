@@ -21,13 +21,11 @@ Rails.application.routes.draw do
   # patch('/products/:id', to: "products#update")
   # delete("/products/:id",to: "products#destroy")
   resources :products do
-    #All the resources in this block will be prefixed by this
-    # /questions/:question_id
-    # So we can now grab questio_id from params like params[:question_id]
     resources :reviews, only:[:create, :destroy]
-     #this will only generate routes for :create and :destroy
-     # like questions/:question_id/answers/:id
-      # like questions/:question_id/answers/:id/edit
   end
+  
+  resources :users, only: [:new, :create]
+  resource :session, only: [:new, :create, :destroy]
+
 
 end

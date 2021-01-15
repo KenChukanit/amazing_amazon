@@ -1,5 +1,6 @@
 class Product < ApplicationRecord
-
+    belongs_to :user, optional: true
+    
     before_validation :set_default_price, :set_default_sale_price,:capitalize_title
 
     # [Exercise] Notifying admin

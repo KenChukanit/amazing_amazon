@@ -24,6 +24,27 @@ Review.destroy_all()
 #         updated_at: created_at
 #     })
 # end
+PASSWORD='con'
+super_user= User.create(
+    first_name: 'Ken',
+    last_name:'Chukanit',
+    email: 'chonlasek.c@gmail.com',
+    password: PASSWORD
+)
+
+10.times do
+    first_name= Faker::Name.first_name 
+    last_name= Faker::Name.last_name 
+    User.create(
+        first_name: first_name,
+        last_name: last_name,
+        email: "#{first_name}.#{last_name}@example.com",
+        password: PASSWORD
+    )
+end
+users=User.all
+
+
 
 100.times do
     created_at=Faker::Date.backward(days: 365*5)
@@ -33,14 +54,16 @@ Review.destroy_all()
        price: rand(400..500),
        sale_price: rand(1..399),
        created_at: created_at,
-       updated_at: created_at
+       updated_at: created_at,
+       user: users.sample
    )
 
     if p.valid?
     p.reviews = rand(0..15).times.map do 
         Review.new(
             body: Faker::GreekPhilosophers.quote,
-            rating: rand(1..5)
+            rating: rand(1..5),
+            user: users.sample
             )
        end
    end
@@ -63,3 +86,6 @@ review =Review.all
 
 puts Cowsay.say("Created #{NUM_OF_PRODUCTS} products and #{NUM_OF_USERS} users!", :dragon)
 puts Cowsay.say("Generated #{review.count} reviews.",:tux)
+puts Cowsay.say("Generated #{users.count} answers.",:beavis)
+puts Cowsay.say("Login with  #{super_user.email} and password:#{PASSWORD}.",:koala)
+p

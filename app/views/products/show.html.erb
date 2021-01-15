@@ -3,6 +3,7 @@
 <p><%= number_to_currency(@product.price) %></p>
 <p><%=  number_to_currency(@product.sale_price)%></p>
 <small>
+<p>Created by: <%= @product.user&.full_name%></p>
 <p>Created On: <%= time_ago_in_words(@product.created_at)  %> </p>
 </small>
 <small>
@@ -45,6 +46,7 @@
     <h4>Rating: <%= review.rating %></h4>
      <h4><%= display_stars(review) %></h4>
     <p><%= review.body %></p>
+    <p>Review by: <%= review.user&.full_name%></p>
     <%= link_to "Delete",product_review_path(@product,review), method: :delete,data: {confirm: "Are you sure to delete this review?"} %>
     </div>
 <% end %>
