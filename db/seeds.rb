@@ -29,7 +29,9 @@ super_user= User.create(
     first_name: 'Ken',
     last_name:'Chukanit',
     email: 'chonlasek.c@gmail.com',
-    password: PASSWORD
+    password: PASSWORD,
+    is_admin: true
+
 )
 
 10.times do

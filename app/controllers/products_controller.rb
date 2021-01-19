@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
     before_action :authenticate_user!, except: [:index, :show]#
     before_action :find_product, only:[:show, :edit, :update, :destroy]
+    before_action :authorize_user!, only:[:edit,:update,:destroy]
 
     def new
         @product = Product.new
@@ -24,6 +25,7 @@ class ProductsController < ApplicationController
 
     def show
         @review = Review.new
+        @reviews=@product.reviews.order(created_at: :desc)
     end
 
     def edit
@@ -52,5 +54,9 @@ class ProductsController < ApplicationController
     def product_params
         params.require(:product).permit(:title, :description, :price, :sale_price)
     # permit specifies all the input names that are allowes as symbol
+    end
+
+    def authorize_user!
+        redirect_to root_path, alert: 'Not Authorized' unless can?(:crud, @product)
     end
 end

@@ -21,11 +21,11 @@ Rails.application.routes.draw do
   # patch('/products/:id', to: "products#update")
   # delete("/products/:id",to: "products#destroy")
   resources :products do
-    resources :reviews, only:[:create, :destroy]
+    resources :reviews
   end
   
   resources :users, only: [:new, :create]
   resource :session, only: [:new, :create, :destroy]
-
+  resources :admin, only: [:index]
 
 end
