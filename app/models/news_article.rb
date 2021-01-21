@@ -1,15 +1,26 @@
 class NewsArticle < ApplicationRecord
-    validates :title, presence: true, uniqueness: true
-    validates :description, presence: true
+  validates :title, presence: true, uniqueness: true
+  validates :description, presence: true 
+  # validate :published_after_create
 
-    validate :published_at_after_created_at?
+  before_save :titleize_title
 
-    def published_at_after_created_at?  
-      if published_at < created_at
-        errors.add :published_at, "must be after created_date"
-      end
-    end
-    # def published
-    #     @news_article.update(published_at: Date.now)
-    # end
+  def titleize_title
+    self.title = self.title.titleize
+  end
+
+  def publish
+    update(published_at: Time.zone.now)
+  end
+
+  def self.published
+    where('published_at > created_at')
+  end
+
+  private
+
+  def published_after_create
+    return unless published_at.present?
+    errors.add(:published_at, "published_at must be after created_at") if published_at <= created_at 
+  end
 end

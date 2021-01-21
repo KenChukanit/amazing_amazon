@@ -1,51 +1,71 @@
 require 'rails_helper'
-# rails g rspec:model JobPost
-
-RANDOM_HUNDRED_CHARS="hello world hello world hello world hello world hello world hello world hello world hello world hello world hello world hello world hello world hello world hello worldhello world"
 
 RSpec.describe NewsArticle, type: :model do
-  describe "validates" do
-    describe "title" do
-
-    it "requires a title" do
-      #given
-      news_article= FactoryBot.build(:news_article, title:nil, published_at: DateTime.now.in_time_zone("Asia/Kolkata"),  
-      created_at: DateTime.now.in_time_zone("Asia/Kolkata"))
-      #when 
-      news_article.valid?
-
-      #then
-      expect(news_article.errors.messages).to(have_key(:title))
-      end
-    end
-    
-  describe "title" do
-    it 'title is unique' do
-      persisted_news_article= FactoryBot.create(:news_article)
-      news_article= FactoryBot.build(:news_article, title: persisted_news_article.title, published_at: DateTime.now.in_time_zone("Asia/Kolkata"),  
-      created_at: DateTime.now.in_time_zone("Asia/Kolkata"))
-      news_article.valid?
-
-      expect(news_article.errors.messages).to(have_key(:title))
-    end
+  def news_article
+    @news_article ||= NewsArticle.new(
+      title: 'Random Title',
+      description: 'This is a really good article'
+    )
   end
-  describe 'description' do  
-    it 'requires a description' do
-      news_article = FactoryBot.build(:news_article, description: nil, published_at: DateTime.now.in_time_zone("Asia/Kolkata"),
-        created_at: DateTime.now.in_time_zone("Asia/Kolkata"))
-      news_article.valid?
-      expect(news_article.errors.messages).to(have_key(:description))
+
+  describe 'validations' do
+    it 'has a title' do
+      n = news_article
+      n.title = nil
+      n.valid?
+      expect(n.errors).to have_key(:title)
     end
-  end
-  describe 'published_at' do
-    it 'published_at must be greater than created_at' do 
-      news_article = FactoryBot.build(:news_article,  published_at: DateTime.now.in_time_zone("Asia/Kolkata"),  created_at: DateTime.now.in_time_zone("Asia/Kolkata"))
-      news_article.valid?
-      expect(news_article.errors.add :published_at, "must be after created_date")
+
+    it 'has a unique title' do 
+      n = news_article
+      n.save
+      n2 = NewsArticle.new(title: 'Random Title')
+      n2.valid?
+      expect(n2.errors).to have_key(:title)
+    end
+
+    it 'has a description' do
+      n = news_article
+      n.description = nil
+      n.valid?
+      expect(n.errors).to have_key(:description)
+    end
+
+    it 'ensures the published_at is after created_at' do
+      n = news_article
+      n.save
+      n.published_at = n.created_at
+      n.valid?
+      expect(n.errors).to have_key(:published_at)
     end
   end
 
-
+  describe '#titleize_title' do
+    it 'titleizes the title' do
+      n = news_article
+      n.title = "a unique title"
+      n.save
+      expect(NewsArticle.last.title).to eq("A Unique Title")
+    end
   end
 
+  describe '#publish' do
+    it 'sets published_at to the current date' do
+      n = news_article
+      n.save
+      n.publish
+      expect(n.published_at.to_i).to eq(Time.zone.now.to_i)
+    end
+  end
+
+  describe '.published' do
+    it 'returns the published articles' do
+      n1 = NewsArticle.create(title: 'article 1', description: "testing published")
+      n2 = NewsArticle.create(title: 'article 2', description: "testing published")
+      n3 = NewsArticle.create(title: 'article 3', description: "testing published")
+      n1.publish
+      n2.publish
+      expect([n1, n2]).to eq(NewsArticle.published)
+    end
+  end
 end
