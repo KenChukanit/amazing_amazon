@@ -25,9 +25,14 @@ class NewsArticlesController < ApplicationController
     end
 
     def destroy
+        if can?(:delete, @news_article)
         @news_article.destroy
         flash[:danger] = 'article deleted'
         redirect_to news_articles_path
+        else  
+            redirect_to root_path
+            flash[:danger] = 'Not authorized'
+        end
     end
 
     def edit

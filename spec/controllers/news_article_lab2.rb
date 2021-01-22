@@ -126,21 +126,45 @@ RSpec.describe NewsArticlesController, type: :controller do
             expect(assigns(:news_articles)).to eq([news_article3, news_article2, news_article1])
         end
     end
-    # describe '#destroy' do
-    #     before do
-    #         @news_article = FactoryBot.create(:news_article)
-    #         delete(:destroy, params:{id: @news_article.id})
-    #     end
-    #     it 'remove article from DB' do
-    #         expect(NewsArticle.find_by(id: @news_article.id)).to(be(nil))
-    #     end
-    #     it 'redirect to index template' do
-    #         expect(response).to redirect_to(news_articles_path)
-    #     end
-    #     it 'set a flash message' do
-    #         expect(flash[:danger]).to be
-    #     end
-    # end
+    describe '#destroy' do
+        context 'Signed in' do
+            context 'Owner' do 
+                before do
+                    current_user=FactoryBot.create(:user)
+                    session[:user_id]=current_user.id
+                    @news_article = FactoryBot.create(:news_article, user: current_user)
+                    delete(:destroy, params:{id: @news_article.id})
+                end
+                it 'remove article from DB' do
+                    expect(NewsArticle.find_by(id: @news_article.id)).to(be(nil))
+                end
+                it 'redirect to index template' do
+                    expect(response).to redirect_to(news_articles_path)
+                end
+                it 'set a flash message' do
+                    expect(flash[:danger]).to be
+                end
+            end
+            context 'Not Owner' do
+                before do
+                    current_user=FactoryBot.create(:user)
+                    session[:user_id]=current_user.id
+                    @news_article = FactoryBot.create(:news_article)
+                    delete(:destroy, params:{id: @news_article.id})
+                end
+                it 'does not remove article' do
+                    expect(NewsArticle.find(@news_article.id)).to eq(@news_article)
+                end
+                it 'rendirect root page'do
+                    expect(response).to redirect_to(root_path)
+                end
+                it 'show flash message not authorized' do
+                    expect(flash[:danger]).to be
+                end
+
+            end
+        end
+    end
     describe '#edit' do
         context 'Not signed in' do #########
             before do
