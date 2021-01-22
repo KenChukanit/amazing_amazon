@@ -1,12 +1,14 @@
 class NewsArticlesController < ApplicationController
-    before_action :find_article, only:[:show,:update, :destroy]
+    before_action :authenticate_user!, except:[:index,:show]##lab1
+    before_action :find_article, only:[:show,:update, :destroy, :edit]
+    
     def new
         @news_article = NewsArticle.new
     end
     
     def create
         @news_article= NewsArticle.new news_article_params
-            
+        @news_article.user=current_user
         if @news_article.save
             redirect_to news_article_path(@news_article)
         else
@@ -27,9 +29,14 @@ class NewsArticlesController < ApplicationController
         flash[:danger] = 'article deleted'
         redirect_to news_articles_path
     end
-   
+
     def edit
-        
+        if can?(:edit, @news_article)
+            render :edit
+        else
+            redirect_to root_path
+            flash[:danger] = 'Not authorized'
+        end
     end
 
     def update
@@ -53,7 +60,12 @@ class NewsArticlesController < ApplicationController
             )
     end
 
+    def authenticate_user!
+        redirect_to new_session_path, notice: 'Please sign in' unless user_signed_in?
+    end
 
-
+    def authorize_user! #lab 2,3
+        redirect_to root_path, alert: 'Not Authorized' unless can?(:crud, @news_article)
+    end
 
 end

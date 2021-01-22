@@ -5,6 +5,7 @@ RSpec.describe NewsArticle, type: :model do
     @news_article ||= NewsArticle.new(
       title: 'Random Title',
       description: 'This is a really good article'
+      
     )
   end
 

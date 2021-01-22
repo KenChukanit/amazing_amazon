@@ -44,5 +44,9 @@ class Ability
       user == review.user
     end
 
+    can (:crud), NewsArticle do |news_article|
+      user == news_article.user
+    end
+
   end
 end
