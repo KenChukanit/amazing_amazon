@@ -9,13 +9,15 @@ class User < ApplicationRecord
     has_many :products, dependent: :nullify
     has_many :reviews, dependent: :nullify
     has_many :news_articles, dependent: :nullify
+    has_many :likes
+    has_many :liked_review, through: :likes, source: :review
     # [Exercise] Find a user by name or email
     scope(:search, -> (query) { where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", "%#{query}%", "%#{query}%", "%#{query}%")})
     # [Exercise] After
     scope(:created_after, -> (date) { where("created_at < ?", "#{date}")})
 
     def full_name
-        "#{first_name.capitalize!} #{last_name.capitalize!}"
+        "#{first_name.capitalize} #{last_name.capitalize}"
     end
 end
 

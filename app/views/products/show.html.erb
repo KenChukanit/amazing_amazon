@@ -44,6 +44,7 @@
 <%# to show the ratings  %>
 <h3>Reviews</h3>
 <% @reviews.each do |review|%>
+
 <% if review.hide == false || (can? :crud, @product)%>
     <% if review.hide == false%>
         <div class="card">
@@ -51,14 +52,35 @@
         <%= review.body %>
         <p class="ml-4"> Rating:</p>
         <h4 class="ml-4">
+        
+
+
     <% else review.hide == true%>
         <div class="card text-muted">
         <p class="card-body">
         <%= review.body %>
         <p class="ml-4"> Rating:</p>
         <h4 class="ml-4">
+
+
+
+        
     <%end%>
     <%= display_stars(review) %></h4>
+
+   <p>
+      <% if user_signed_in?  && can?(:like, review)%>
+          <% like = current_user.likes.find_by_review_id(review) %>
+          <% if like %>
+            <%= link_to 'Unlike', product_review_like_path(@product, review, like), method: :delete %>
+          <% else %>
+            <%= link_to 'Like', product_review_likes_path(@product, review, like), method: :post %>
+          <% end %>
+      <% end %>
+     <%= review.likes.count%> likes
+    </p>
+
+
     <% if can? :crud, @product %>
         <small>
         <%if review.hide == false%>
@@ -88,3 +110,6 @@
 <br/>
 <% end %> 
 <%end%>
+
+
+

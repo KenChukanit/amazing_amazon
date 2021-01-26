@@ -26,6 +26,7 @@ class ProductsController < ApplicationController
     def show
         @review = Review.new
         @reviews=@product.reviews.order(created_at: :desc)
+        @like = @review.likes.find_by(user: current_user)
     end
 
     def edit

@@ -122,3 +122,18 @@ end
 end
 
 rspec(:news_article,NewsArticle,NewsArticlesController,news_article)
+
+
+
+# <div>
+#  <small>
+#     Liked by: <%= pluralize @review.likes.count, 'like' %>
+#     </small>
+#     <small>
+#         <% if @like.present? %>
+#         <%= link_to 'unlike', like_path(@like),method: :delete  %> 
+#         <% else %>  
+#         <%= link_to 'like', product_review_likes_path(@product, review, @like), method: :post  %> 
+#         <% end %> 
+#     </small>
+# </div>

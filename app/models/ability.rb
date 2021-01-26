@@ -48,5 +48,13 @@ class Ability
       user == news_article.user
     end
 
+    can(:like, Review) do |review|
+      user.persisted? && review.user != user
+    end
+
+    can(:destroy, Like) do |like|
+      like.user == user
+    end
+
   end
 end
