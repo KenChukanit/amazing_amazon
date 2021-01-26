@@ -11,6 +11,8 @@ class User < ApplicationRecord
     has_many :news_articles, dependent: :nullify
     has_many :likes
     has_many :liked_review, through: :likes, source: :review
+    has_many :favourites
+    has_many :favoured_products, through: :favourites, source: :product
     # [Exercise] Find a user by name or email
     scope(:search, -> (query) { where("first_name ILIKE ? OR last_name ILIKE ? OR email ILIKE ?", "%#{query}%", "%#{query}%", "%#{query}%")})
     # [Exercise] After

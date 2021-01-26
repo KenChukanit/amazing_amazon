@@ -27,6 +27,7 @@ class ProductsController < ApplicationController
         @review = Review.new
         @reviews=@product.reviews.order(created_at: :desc)
         @like = @review.likes.find_by(user: current_user)
+        @favourite = @product.favourites.find_by_user_id current_user if user_signed_in?
     end
 
     def edit

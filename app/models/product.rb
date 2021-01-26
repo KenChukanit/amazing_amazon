@@ -22,6 +22,8 @@ class Product < ApplicationRecord
     validate :sale_price_less_than_price
 
     has_many :reviews, -> { order('updated_at DESC') }, dependent: :destroy
+    has_many :favourites, dependent: :destroy
+    has_many :favouriters, through: :favourites, source: :user
 
     # [Exercise] Product model custom methods
     scope(:search, -> (query) { where("title ILIKE? OR description ILIKE?", "%#{query}%") })
