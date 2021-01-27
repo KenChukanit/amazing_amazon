@@ -16,14 +16,6 @@ class VotesController < ApplicationController
         redirect_to review.product
     end
 
-    def update 
-        if !@vote.update(result: params[:result])
-            flash[:alert] = @vote.errors.full_messages.join(', ')
-        else
-        redirect_to @vote.review.product 
-        end
-    end
-
     def destroy 
         @vote.destroy 
         redirect_to @vote.review.product 

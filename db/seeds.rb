@@ -7,15 +7,16 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 NUM_OF_USERS=10
-NUM_OF_PRODUCTS= 30
+NUM_OF_PRODUCTS= 20
 NUM_TAGS= 9
-
+NUM_OF_VOTES = 500
 Like.delete_all
 Tagging.delete_all
 Tag.delete_all
 User.delete_all
 Review.delete_all
 Product.delete_all
+Vote.delete_all
 
 # NUM_OF_PRODUCTS.times do
 #     created_at = Faker::Date.backward(days: 365*5)
@@ -71,29 +72,29 @@ NUM_OF_PRODUCTS.times do
 
     if p.valid?
     p.reviews = rand(0..15).times.map do 
-        Review.new(
+    r = Review.new(
             body: Faker::GreekPhilosophers.quote,
             rating: rand(1..5),
             user: users.sample,
-            likers: users.shuffle.slice(0,rand(users.count))
+            likers: users.shuffle.slice(0,rand(users.count)),
             )
     end
     p.tags = tags.shuffle.slice(0,rand(tags.count))
+    
    end
 end
 
-    
+reviews = Review.all
 
-   
+NUM_OF_VOTES.times do
+v = Vote.create(
+    user: users.sample,
+    result: [true, false].sample,
+    review: reviews.sample
+)
+end
 
-NUM_OF_USERS.times do
-    User.create({
-        first_name: Faker::Name.first_name,
-        last_name: Faker::Name.last_name,
-        email: Faker::Internet.email
-    })
-end 
-
+reviews = Review.all
 product = Product.all
 review =Review.all
 
@@ -102,4 +103,5 @@ puts Cowsay.say("Generated #{review.count} reviews.",:tux)
 puts Cowsay.say("Generated #{users.count} answers.",:beavis)
 puts Cowsay.say("Generated #{Like.count} likes.",:bunny)
 puts Cowsay.say("Generated #{tags.count} tags.",:sheep)
+puts Cowsay.say("Generated #{Vote.count} votes.",:frogs)
 puts Cowsay.say("Login with  #{super_user.email} and password:#{PASSWORD}.",:koala)

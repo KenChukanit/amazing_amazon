@@ -134,18 +134,17 @@
  <% vote = review.votes.find_by(user: current_user) %>
       <span class="vote-widget">
         <% if vote.nil? %>
-          <%= link_to 'vote up', product_review_votes_path(@product, review, result: true),  method: :post %>
-          or
-          <%= link_to 'vote down', product_review_votes_path(@product, review, result: false),  method: :post %>
+        <%= link_to 'vote up', product_review_votes_path(@product, review, result: true),  method: :post %>
+        or
+        <%= link_to 'vote down', product_review_votes_path(@product, review, result: false),  method: :post %>
         <% elsif vote.result? %>
             <span>  You already voted  </span>
         <%= link_to 'change vote', product_review_vote_path(@product, review, vote), method: :delete, class: 'active' %>
         <% end %>
-      </span>
-       <% end %>
-       <span> Total vote point(vote up - vote down)    </span>
-      <%= review.vote_total %>
-
+    </span>
+    <% end %>
+    <span> Total vote points  <%= review.vote_total %>  </span>
+    <span>(vote up - vote down) </span>
 
 
 
