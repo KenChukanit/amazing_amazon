@@ -22,6 +22,13 @@
     <%= f.label :sale_price %>
     <%= f.number_field(:sale_price, class: 'form-control', min: 0, placeholder: 'Enter Sale Price', step: :any )%>
   </div>
+
+  <div>
+    <%= f.collection_check_boxes :tag_ids, Tag.order(name: :asc), :id, :name do |t| %> 
+      <%= t.check_box %>
+      <%= t.text  %> 
+    <% end %> 
+</div> 
 <%=f.submit  %> 
 
 <% end %>

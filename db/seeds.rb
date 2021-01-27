@@ -6,12 +6,16 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-NUM_OF_USERS=5
-NUM_OF_PRODUCTS=100
+NUM_OF_USERS=10
+NUM_OF_PRODUCTS= 30
+NUM_TAGS= 9
 
-Product.destroy_all()
-User.destroy_all()
-Review.destroy_all()
+Like.delete_all
+Tagging.delete_all
+Tag.delete_all
+User.delete_all
+Review.delete_all
+Product.delete_all
 
 # NUM_OF_PRODUCTS.times do
 #     created_at = Faker::Date.backward(days: 365*5)
@@ -34,7 +38,7 @@ super_user= User.create(
 
 )
 
-10.times do
+NUM_OF_USERS.times do
     first_name= Faker::Name.first_name 
     last_name= Faker::Name.last_name 
     User.create(
@@ -46,9 +50,14 @@ super_user= User.create(
 end
 users=User.all
 
+NUM_TAGS.times do 
+    Tag.create(
+        name:Faker::Commerce.department
+    )
+end
+tags=Tag.all
 
-
-100.times do
+NUM_OF_PRODUCTS.times do
     created_at=Faker::Date.backward(days: 365*5)
    p=Product.create(
        title: Faker::Cannabis.strain,
@@ -65,9 +74,11 @@ users=User.all
         Review.new(
             body: Faker::GreekPhilosophers.quote,
             rating: rand(1..5),
-            user: users.sample
+            user: users.sample,
+            likers: users.shuffle.slice(0,rand(users.count))
             )
-       end
+    end
+    p.tags = tags.shuffle.slice(0,rand(tags.count))
    end
 end
 
@@ -89,5 +100,6 @@ review =Review.all
 puts Cowsay.say("Created #{NUM_OF_PRODUCTS} products and #{NUM_OF_USERS} users!", :dragon)
 puts Cowsay.say("Generated #{review.count} reviews.",:tux)
 puts Cowsay.say("Generated #{users.count} answers.",:beavis)
+puts Cowsay.say("Generated #{Like.count} likes.",:bunny)
+puts Cowsay.say("Generated #{tags.count} tags.",:sheep)
 puts Cowsay.say("Login with  #{super_user.email} and password:#{PASSWORD}.",:koala)
-p

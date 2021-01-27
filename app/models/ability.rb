@@ -64,5 +64,17 @@ class Ability
       favourite.user == user
     end
 
+    can :tag, Product do |product|
+      product.user == user
+    end
+
+    can :vote, Review do |review|
+      review.user != user 
+    end 
+
+    can :crud, Vote do |vote|
+      vote.user == user 
+    end 
+    
   end
 end

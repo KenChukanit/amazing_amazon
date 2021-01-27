@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   resources :products do
     resources :reviews  do #shallow: :true, only: [:create, :destroy,:update, :show]
       resources :likes,  only: [:create, :destroy]
+      resources :votes, only: [:create, :update, :destroy]
     end
     resources :favourites, shallow: :true, only: [ :create, :destroy]
   end
@@ -33,4 +34,5 @@ Rails.application.routes.draw do
   resource :session, only: [:new, :create, :destroy]
   resources :admin, only: [:index]
   resources  :news_articles
+  resources :tags, only: [:index, :show]
 end

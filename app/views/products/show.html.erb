@@ -3,6 +3,28 @@
 <p><%= number_to_currency(@product.price) %></p>
 <p><%=  number_to_currency(@product.sale_price)%></p>
 <small>
+
+<div>
+    Tags : <%= @product.tags.map(&:name).join(', ')  %> 
+
+</div>
+<% if user_signed_in?  && can?(:tag, @product)%>
+  <div>
+  <%= form_with model: @product, local:true do |f| %>
+    <%= f.collection_check_boxes :tag_ids, Tag.order(name: :asc), :id, :name do |t| %> 
+    <%= t.check_box %>
+    <%= t.text  %> 
+    <% end %> 
+    <%=f.submit  %> 
+    <% end %> 
+</div> 
+
+
+<% end %>
+
+
+
+<br>
 <p>Created by: <%= @product.user&.full_name%></p>
 <p>Created On: <%= time_ago_in_words(@product.created_at)  %> </p>
 </small>
@@ -107,6 +129,27 @@
     Reviewed by:
     <%= review.user&.full_name || "DELETED" %>
 </div>
+
+<% if user_signed_in?  && can?(:vote, review)%>
+ <% vote = review.votes.find_by(user: current_user) %>
+      <span class="vote-widget">
+        <% if vote.nil? %>
+          <%= link_to 'vote up', product_review_votes_path(@product, review, result: true),  method: :post %>
+          or
+          <%= link_to 'vote down', product_review_votes_path(@product, review, result: false),  method: :post %>
+        <% elsif vote.result? %>
+            <span>  You already voted  </span>
+        <%= link_to 'change vote', product_review_vote_path(@product, review, vote), method: :delete, class: 'active' %>
+        <% end %>
+      </span>
+       <% end %>
+       <span> Total vote point(vote up - vote down)    </span>
+      <%= review.vote_total %>
+
+
+
+
+
 <% if can? :crud, review %>
 <p class="ml-4"><%= link_to "Delete",product_review_path(@product,review), method: :delete,data: {confirm: "Are you sure?"} %>
 </p>

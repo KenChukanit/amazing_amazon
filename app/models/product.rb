@@ -25,6 +25,9 @@ class Product < ApplicationRecord
     has_many :favourites, dependent: :destroy
     has_many :favouriters, through: :favourites, source: :user
 
+    has_many :taggings, dependent: :destroy
+    has_many :tags, through: :taggings
+
     # [Exercise] Product model custom methods
     scope(:search, -> (query) { where("title ILIKE? OR description ILIKE?", "%#{query}%") })
 

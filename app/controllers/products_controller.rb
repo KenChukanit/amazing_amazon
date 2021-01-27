@@ -49,16 +49,18 @@ class ProductsController < ApplicationController
     end
 
     private
+    
     def find_product
         @product=Product.find params[:id] 
     end
 
     def product_params
-        params.require(:product).permit(:title, :description, :price, :sale_price)
+        params.require(:product).permit(:title, :description, :price, :sale_price, tag_ids:[])
     # permit specifies all the input names that are allowes as symbol
     end
 
     def authorize_user!
         redirect_to root_path, alert: 'Not Authorized' unless can?(:crud, @product)
     end
+
 end
